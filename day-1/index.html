@@ -58,7 +58,6 @@
                     challenge(fileContent);
                 };
 
-                // Read the file as text
                 reader.readAsText(file);
             }
         });
@@ -69,31 +68,23 @@
             let totalSum = 0;
             lines.forEach(line => {
                 totalSum += getFirstAndLastNumberFromString(line);
-                console.log(totalSum)
-                console.log("==========")
             });
-
-            
-            // result.innerHTML = totalSum;
+            result.innerHTML = totalSum;
 
         }
 
         function getFirstAndLastNumberFromString(text) {
             let firstNum = 0;
             let lastNum = 0;
-            console.log("==========")
-            console.log(text)
 
             for (let i = 0; i < text.length; i++) {
                 if (isNumber(text[i])) {
                     firstNum = parseInt(text[i]);
-                    console.log("First number:", firstNum);
 
                     for (let j = text.length; j >= i; j--) {
 
                         if (isNumber(text[j])) {
                             lastNum = parseInt(text[j]);
-                            console.log("Last number:", lastNum);
                             return firstNum*10 + lastNum;
                         }
                     }
