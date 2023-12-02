@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 2 - Ch 1</title>
+    <title>Day 2 - Ch 2</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -35,7 +35,7 @@
 
 <body>
     <div>
-        <h1>Day 2 - Challenge 1 - Advent of code</h1>
+        <h1>Day 2 - Challenge 2 - Advent of code</h1>
 
         <input type="file" id="file">
         <br>
@@ -44,12 +44,6 @@
 
     <script>
         const fileInput = document.getElementById('file');
-
-        const configuration = {
-            red: 12,
-            green: 13,
-            blue: 14
-        }
 
         fileInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -68,38 +62,38 @@
             }
         });
 
-
         function challenge(file) {
             const lines = file.split('\n');
-            let sumPossibleGamesId = 0;
+            let totalPower = 0;
             for (let i = 0; i < lines.length; i++) {
-                if (isPossibleGame(lines[i])) {
-                    sumPossibleGamesId += i+1;
+                totalPower += minimumPowerFromGame(lines[i])
+            }
+            result.innerHTML = totalPower;
+        }
+
+        function minimumPowerFromGame(line) {
+            const highestPickByColour = {
+                red: 0,
+                green: 0,
+                blue: 0
+            }
+
+            //All picks that the Elf has made
+            let picks = line.split(': ')[1].split(/,\s|;\s/); // split ,space OR ;scape
+
+            for (const pick of picks) {
+
+                const quantity = parseInt(pick.split(' ')[0]);
+                const color = pick.split(' ')[1];
+
+                if (highestPickByColour[color] < quantity) {
+                    highestPickByColour[color] = quantity;
                 }
             }
-            result.innerHTML = sumPossibleGamesId;
+            return highestPickByColour.red * highestPickByColour.green * highestPickByColour.blue;
+
         }
 
-        function isPossibleGame(line) {
-            let subsets = line.split(': ')[1].split('; ');
-            for (const subset of subsets) {
-                if(!isPossibleSubset(subset)) {
-                    return false;
-                }
-            };
-            return true;
-        }
-
-        function isPossibleSubset(subset) {
-            for (const pick of subset.split(', ')) {
-                const quantity = pick.split(' ')[0];
-                const color = pick.split(' ')[1];
-                if (configuration[color] < quantity) {
-                    return false;
-                }
-            };
-            return true;
-        }
     </script>
 </body>
 
