@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 2 - Ch 2</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        div {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
+        input {
+            width: 300px;
+            height: 30px;
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>Day 2 - Challenge 2 - Advent of code</h1>
+
+        <input type="file" id="file">
+        <br>
+        <p>Output: <span id="result"></span></p>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file');
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const fileContent = e.target.result;
+                    const lines = fileContent.split('\n');
+
+                    challenge(fileContent);
+                };
+
+                reader.readAsText(file);
+            }
+        });
+
+        function challenge(file) {
+            const lines = file.split('\n');
+            let totalPower = 0;
+            for (let i = 0; i < lines.length; i++) {
+                totalPower += minimumPowerFromGame(lines[i])
+            }
+            result.innerHTML = totalPower;
+        }
+
+        function minimumPowerFromGame(line) {
+            const highestPickByColour = {
+                red: 0,
+                green: 0,
+                blue: 0
+            }
+
+            //All picks that the Elf has made
+            let picks = line.split(': ')[1].split(/,\s|;\s/); // split ,space OR ;scape
+
+            for (const pick of picks) {
+
+                const quantity = parseInt(pick.split(' ')[0]);
+                const color = pick.split(' ')[1];
+
+                if (highestPickByColour[color] < quantity) {
+                    highestPickByColour[color] = quantity;
+                }
+            }
+            return highestPickByColour.red * highestPickByColour.green * highestPickByColour.blue;
+
+        }
+
+    </script>
+</body>
+
+</html>
