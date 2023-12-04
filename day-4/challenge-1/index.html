@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 4 - Ch 1</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        div {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
+        input {
+            width: 300px;
+            height: 30px;
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>Day 4 - Challenge 1 - Advent of code</h1>
+
+        <input type="file" id="file">
+        <br>
+        <p>Output: <span id="result"></span></p>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file');
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const fileContent = e.target.result;
+                    challenge(fileContent);
+                };
+
+                reader.readAsText(file);
+            }
+        });
+
+        function challenge(file) {
+            const lines = file.split('\n');
+            let totalPoints = 0;
+            
+            for (const line of lines) {
+                totalPoints += getPointsFromCards(line.split(': ')[1]);
+            }
+
+            result.innerHTML = totalPoints;
+        }
+
+        function getPointsFromCards(card) {
+            let points = 0;
+            card = card.split('|');
+            let winningNumbers = card[0].split(' ').map(Number).filter(Boolean);
+            let numbersYouHave = card[1].split(' ').map(Number).filter(Boolean);
+
+            for (const winningNumber of winningNumbers) {
+                if (numbersYouHave.includes(winningNumber)) {
+                    points != 0 ? points *= 2 : points = 1;
+                }
+            }
+
+            return points;
+        }
+        
+    </script>
+</body>
+
+</html>
