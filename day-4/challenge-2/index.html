@@ -95,9 +95,9 @@
 
             // Add scratchcards from previous saved cards
             scratchcards[numberOfCard] = scratchcards[numberOfCard] ?? 0;
-            scratchcards[numberOfCard] += 1;
-            for (let i = 0; i < scratchcards[numberOfCard]; i++) {
-                for (let i = numberOfCard + 1; i <= numberOfCard + numberOfCopies; i++) {
+            scratchcards[numberOfCard] += 1; // add the original card
+            for (let i = 0; i < scratchcards[numberOfCard]; i++) { // iterates over the quantity of cards with number *numberOfCard*
+                for (let i = numberOfCard + 1; i <= numberOfCard + numberOfCopies; i++) { // add card *numberOfCard* + i *numberOfCopies* times 
                     addScratchcard(i);
                 }
             }
