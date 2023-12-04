@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 4 - Ch 1</title>
+    <title>Day 4 - Ch 2</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -35,7 +35,7 @@
 
 <body>
     <div>
-        <h1>Day 4 - Challenge 1 - Advent of code</h1>
+        <h1>Day 4 - Challenge 2 - Advent of code</h1>
 
         <input type="file" id="file">
         <br>
@@ -44,6 +44,8 @@
 
     <script>
         const fileInput = document.getElementById('file');
+
+        const scratchcards = {};
 
         fileInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -63,29 +65,49 @@
         function challenge(file) {
             const lines = file.split('\n');
             let totalPoints = 0;
-            
-            for (const line of lines) {
-                totalPoints += getPointsFromCards(line.split(': ')[1]);
+
+            for (let i = 0; i < lines.length; i++) {
+                getPointsFromCards(lines[i].split(': ')[1], i + 1);
+            }
+
+            for (const key in scratchcards) {
+                if (scratchcards.hasOwnProperty(key)) {
+                    totalPoints += scratchcards[key];
+                }
             }
 
             result.innerHTML = totalPoints;
         }
 
-        function getPointsFromCards(card) {
-            let points = 0;
+        function getPointsFromCards(card, numberOfCard) {
+            let numberOfCopies = 0;
+
             card = card.split('|');
             let winningNumbers = card[0].split(' ').map(Number).filter(Boolean);
             let numbersYouHave = card[1].split(' ').map(Number).filter(Boolean);
 
+            // Get number of copies from card
             for (const winningNumber of winningNumbers) {
                 if (numbersYouHave.includes(winningNumber)) {
-                    points != 0 ? points *= 2 : points = 1;
+                    numberOfCopies++;
                 }
             }
 
-            return points;
+            // Add scratchcards from previous saved cards
+            scratchcards[numberOfCard] = scratchcards[numberOfCard] ?? 0;
+            scratchcards[numberOfCard] += 1;
+            for (let i = 0; i < scratchcards[numberOfCard]; i++) {
+                for (let i = numberOfCard + 1; i <= numberOfCard + numberOfCopies; i++) {
+                    addScratchcard(i);
+                }
+            }
         }
-        
+
+        function addScratchcard(card) {
+            scratchcards[card] = scratchcards[card] ?? 0;
+            scratchcards[card] += 1;
+        }
+
     </script>
 </body>
 
