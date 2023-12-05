@@ -66,7 +66,14 @@
             }
         });
 
+        function resetVariables() {
+            config = [];
+            mapIndex = -1;
+            maps = [];
+        }
+
         function challenge(file) {
+            resetVariables();
             const lines = file.split('\n');
 
             config = lines[0].split(': ')[1].split(' ').map(Number);
@@ -99,18 +106,15 @@
                 let lockedConfigIndex = [];
                 for (conversor of map) {
                     // Line of each map
-                    const sourceRangeStart = conversor[1];
                     const destinationRangeStart = conversor[0];
+                    const sourceRangeStart = conversor[1];
                     const rangeLength = conversor[2];
-                    for (let i = 0; i < rangeLength; i++) {
-                        const source = sourceRangeStart + i;
-                        // Check if source is in config
-                        for (let j = 0; j < config.length; j++) {
-                            // Make the "translation"
-                            if (!lockedConfigIndex[j] && config[j] === source) {
-                                config[j] = destinationRangeStart + i;
-                                lockedConfigIndex[j] = true;
-                            }
+
+                    for (let i = 0; i < config.length; i++) {
+                        if (!lockedConfigIndex[i] && config[i] >= sourceRangeStart && config[i] <= sourceRangeStart + rangeLength - 1) {
+                            let diference = config[i] - sourceRangeStart;
+                            config[i] = destinationRangeStart + diference;
+                            lockedConfigIndex[i] = true;
                         }
                     }
                 }
