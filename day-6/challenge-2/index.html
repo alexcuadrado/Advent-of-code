@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 6 - Ch 1</title>
+    <title>Day 6 - Ch 2</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -35,7 +35,7 @@
 
 <body>
     <div>
-        <h1>Day 6 - Challenge 1 - Advent of code</h1>
+        <h1>Day 6 - Challenge 2 - Advent of code</h1>
 
         <input type="file" id="file">
         <br>
@@ -45,8 +45,7 @@
     <script>
         const fileInput = document.getElementById('file');
 
-        
-        
+                
         fileInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
             
@@ -63,32 +62,31 @@
         });
         
         function challenge(file) {
-            let races = [];
-            let solution = 1;
 
             const lines = file.split('\n');
 
-            let times = lines[0].split(' ').filter(Number).map(Number);
-            let distances = lines[1].split(' ').filter(Number).map(Number);
+            let time = lines[0].split(' ').filter(Number).map(Number).join('');
+            let distance = lines[1].split(' ').filter(Number).map(Number).join('');
+            
+            console.log('Calculating...');
 
-            for (let raceNumber = 0; raceNumber < distances.length; raceNumber++) {
-                races[raceNumber] = {
-                    time: times[raceNumber],
-                    distance: distances[raceNumber]
+            let lowestWayToWin;
+            for (let i = 1; i < time; i++) {
+                if (i * (time - i) > distance) {
+                    lowestWayToWin = i;
+                    break;
                 }
             }
 
-            races.forEach(race => {
-                let waysToWin = 0;
-                for (let i = 1; i < race.time; i++) {
-                    if (i * (race.time - i) > race.distance) {
-                        waysToWin++;
-                    }
+            let highestWayToWin;
+            for (let i = time - 1; i > 0; i--) {
+                if (i * (time - i) > distance) {
+                    highestWayToWin = i;
+                    break;
                 }
-                solution *= waysToWin;
-            });
+            }
 
-            result.innerHTML = solution;
+            result.innerHTML = highestWayToWin - lowestWayToWin + 1;
         }
 
     </script>
