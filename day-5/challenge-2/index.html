@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 5 - Ch 2</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        div {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
+        input {
+            width: 300px;
+            height: 30px;
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>Day 5 - Challenge 2 - Advent of code</h1>
+
+        <input type="file" id="file">
+        <br>
+        <p>Output: <span id="result"></span></p>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file');
+
+        let config = [];
+
+        let mapIndex = -1;
+        let maps = [];
+
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const fileContent = e.target.result;
+                    challenge(fileContent);
+                };
+
+                reader.readAsText(file);
+            }
+        });
+
+        function resetVariables() {
+            config = [];
+            mapIndex = -1;
+            maps = [];
+        }
+
+        function challenge(file) {
+            resetVariables();
+            const lines = file.split('\n');
+
+            config = lines[0].split(': ')[1].split(' ').map(Number);
+            tmpConfig = [];
+            for (let i = 0; i < config.length; i += 2) {
+                tmpConfig.push([config[i], config[i + 1]]);
+            }
+            config = tmpConfig;
+            tmpConfig = null;
+
+            calculateMapsFromLines(lines);
+
+            seedToLocation();
+
+            const min = Math.min(...config);
+
+            result.innerHTML = min;
+        }
+
+        function calculateMapsFromLines(lines) {
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.includes(':')) {
+                    mapIndex += 1;
+                    continue;
+                }
+                if (line !== '\r') {
+                    maps[mapIndex] = maps[mapIndex] ?? [];
+                    maps[mapIndex].push(line.split(' ').map(Number));
+                }
+            }
+        }
+
+        function seedToLocation() {
+            for (map of maps) {
+                for (conversor of map) {
+                    // Line of each map
+                    const destinationRangeStart = conversor[0];
+                    const sourceRangeStart = conversor[1];
+                    const rangeLength = conversor[2];
+
+                    let configLenght = config.length;
+                    for (let i = 0; i < configLenght; i++) {
+                        const commonRange = getCommonRangeFromRangesOfNumbers([config[i][0], config[i][1]], [sourceRangeStart, sourceRangeStart + rangeLength - 1]);
+                        if (commonRange[0] !== 0 && commonRange[1] !== 0) {
+                            const tempLeft = config[i][0];
+                            const tempRight = config[i][1];
+                            
+                            let leftRange = [tempLeft, commonRange[0] - 1];
+                            let rightRange = [commonRange[1] + 1, tempRight];
+
+                            if(tempLeft === commonRange[0]) {
+                                leftRange = [];
+                            } else {
+                                config.push(leftRange);
+                            }
+
+                            if(tempRight === commonRange[1]) {
+                                rightRange = [];
+                            } else {
+                                config.push(rightRange);
+                            }
+
+                            config.splice(i, 1);
+                            configLenght--;
+
+                            console.log(...leftRange, "-", commonRange[0], commonRange[1], "-", ...rightRange);
+                            console.log('=====================');
+                        }
+                    }
+
+
+
+
+
+
+
+                    // for (let i = 0; i < config.length; i++) {
+                    //     if (config[i] >= sourceRangeStart && config[i] <= sourceRangeStart + rangeLength - 1) {
+                    //         let diference = config[i] - sourceRangeStart;
+                    //         config[i] = destinationRangeStart + diference;
+                    //     }
+                    // }
+                }
+                // Another map
+            }
+        }
+
+        function getCommonRangeFromRangesOfNumbers(range1, range2) {
+            const startRange1 = range1[0];
+            const endRange1 = range1[1];
+            const startRange2 = range2[0];
+            const endRange2 = range2[1];
+
+            if (startRange2 > endRange1 || startRange1 > endRange2) {
+                return [0, 0];
+            }
+
+            const start = Math.max(startRange1, startRange2);
+            const end = Math.min(endRange1, endRange2);
+
+            return [start, end];
+
+        }
+
+    </script>
+</body>
+
+</html>
