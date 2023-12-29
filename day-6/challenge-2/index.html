@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 6 - Ch 2</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        div {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
+        input {
+            width: 300px;
+            height: 30px;
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>Day 6 - Challenge 2 - Advent of code</h1>
+
+        <input type="file" id="file">
+        <br>
+        <p>Output: <span id="result"></span></p>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file');
+
+                
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function (e) {
+                    const fileContent = e.target.result;
+                    challenge(fileContent);
+                };
+                
+                reader.readAsText(file);
+            }
+        });
+        
+        function challenge(file) {
+
+            const lines = file.split('\n');
+
+            let time = lines[0].split(' ').filter(Number).map(Number).join('');
+            let distance = lines[1].split(' ').filter(Number).map(Number).join('');
+            
+            console.log('Calculating...');
+
+            let lowestWayToWin;
+            for (let i = 1; i < time; i++) {
+                if (i * (time - i) > distance) {
+                    lowestWayToWin = i;
+                    break;
+                }
+            }
+
+            let highestWayToWin;
+            for (let i = time - 1; i > 0; i--) {
+                if (i * (time - i) > distance) {
+                    highestWayToWin = i;
+                    break;
+                }
+            }
+
+            result.innerHTML = highestWayToWin - lowestWayToWin + 1;
+        }
+
+    </script>
+</body>
+
+</html>
