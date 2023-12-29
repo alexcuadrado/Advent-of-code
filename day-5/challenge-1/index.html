@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 5 - Ch 1</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        div {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
+        input {
+            width: 300px;
+            height: 30px;
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>Day 5 - Challenge 1 - Advent of code</h1>
+
+        <input type="file" id="file">
+        <br>
+        <p>Output: <span id="result"></span></p>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file');
+        
+        let config = [];
+
+        let mapIndex = -1;
+        let maps = [];
+
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const fileContent = e.target.result;
+                    challenge(fileContent);
+                };
+
+                reader.readAsText(file);
+            }
+        });
+
+        function resetVariables() {
+            config = [];
+            mapIndex = -1;
+            maps = [];
+        }
+
+        function challenge(file) {
+            resetVariables();
+            const lines = file.split('\n');
+
+            config = lines[0].split(': ')[1].split(' ').map(Number);
+
+            calculateMapsFromLines(lines);
+
+            seedToLocation();
+            
+            const min = Math.min(...config);
+
+            result.innerHTML = min;
+        }
+
+        function calculateMapsFromLines(lines) {
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.includes(':')) {
+                    mapIndex += 1;
+                    continue;
+                }
+                if (line !== '\r') {
+                    maps[mapIndex] = maps[mapIndex] ?? [];
+                    maps[mapIndex].push(line.split(' ').map(Number));
+                }
+            }
+        }
+
+        function seedToLocation() {
+            for (map of maps) {
+                let lockedConfigIndex = [];
+                for (conversor of map) {
+                    // Line of each map
+                    const destinationRangeStart = conversor[0];
+                    const sourceRangeStart = conversor[1];
+                    const rangeLength = conversor[2];
+
+                    for (let i = 0; i < config.length; i++) {
+                        if (!lockedConfigIndex[i] && config[i] >= sourceRangeStart && config[i] <= sourceRangeStart + rangeLength - 1) {
+                            let diference = config[i] - sourceRangeStart;
+                            config[i] = destinationRangeStart + diference;
+                            lockedConfigIndex[i] = true;
+                        }
+                    }
+                }
+                // Another map
+            }
+        }
+
+    </script>
+</body>
+
+</html>
